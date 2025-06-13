@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>비밀 채팅</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #ffffff;
+      color: #000000;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+    aside {
+      width: 260px;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-header img {
+      width: 20px;
+      height: 20px;
+    }
+    .sidebar-menu {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sidebar-menu p::before {
+      margin-right: 8px;
+    }
+    .sidebar-menu p:nth-child(1)::before { content: "✚"; }
+    .sidebar-menu p:nth-child(2)::before { content: "⌕"; }
+    .sidebar-menu p:nth-child(3)::before { content: "☰"; }
+    .sidebar-menu p:nth-child(4)::before { content: "▶"; }
+    .sidebar-menu p:nth-child(5)::before { content: "⚙"; }
+
+    .chat-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chat-list p {
+      cursor: default;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .chat-list p:hover {
+      background-color: #f5f5f5;
+    }
+    .chat-list p#easter-egg {
+      cursor: pointer;
+    }
+    .upgrade-button {
+      padding: 16px 16px 0 16px;
+      font-weight: bold;
+      border-top: 1px solid #ddd;
+      background-color: #fff;
+      text-align: left;
+    }
+    .upgrade-sub {
+      font-size: 12px;
+      padding: 4px 16px 16px 16px;
+      color: #666;
+      text-align: left;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-color: #ffffff;
+    }
+    header {
+      padding: 16px;
+      font-size: 20px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #reset-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background-color: #eee;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    #chat-box {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #chat-box:empty::before {
+      content: "무엇을 도와드릴까요?";
+      font-size: 28px;
+      color: #bbb;
+      text-align: center;
+      margin-top: 100px;
+      align-self: center;
+    }
+    .message {
+      max-width: 60%;
+      padding: 12px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+    .mine {
+      background-color: #e2e2e2;
+      align-self: flex-end;
+      margin-right: 20%;
+    }
+    .theirs {
+      background-color: #f0f0f0;
+      align-self: flex-start;
+      margin-left: 20%;
+    }
+    form {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      border-radius: 24px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      width: 60%;
+      gap: 8px;
+      border: solid 1px #aaa;
+    }
+    input {
+      padding: 10px;
+      border-radius: 24px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      background-color: transparent;
+    }
+    .form-tools {
+      display: flex;
+      gap: 8px;
+      font-size: 14px;
+      color: #888;
+    }
+    .form-submit {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -40px; /* 버튼을 위로 올리는 값, 필요에 따라 조정하세요 */
+    }
+    button[type="submit"] {
+      background-color: #000000;
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <aside>
+    <div class="sidebar-header">
+      <img src="chatgpt.logo.jpg" alt="Logo" />
+      ChatGPT
+    </div>
+    <div class="sidebar-menu">
+      <p>새 채팅</p>
+      <p>채팅 검색</p>
+      <p>라이브러리</p>
+      <p>Sora</p>
+      <p>GPT</p>
+    </div>
+    <div class="chat-list">
+      <p>우디 앨런 분석</p>
+      <p>미드나잇 인 파리 해석</p>
+      <p>파인다이닝 코스 추천</p>
+      <p>공부하는 효율적인 방법</p>
+      <p>라라랜드 결말 분석</p>
+      <p>심심할 때 선택지</p>
+      <p>비교문화 수행평가</p>
+      <p>술 마시고 싶을 때</p>
+      <p>부산 여행 코스 추천</p>
+      <p>부동의 이상형</p>
+      <p>성공 방법</p>
+      <p>수행평가 양식 확인</p>
+      <p>브래드 피트 따라잡기</p>
+      <p>어깨 넓어지는 방법</p>
+      <p>왜 이렇게 귀엽지</p>
+      <p id="easter-egg">이스터에그</p>
+    </div>
+    <div class="upgrade-button">플랜 업그레이드</div>
+    <div class="upgrade-sub">최고 모델에 더 많은 엑세스</div>
+  </aside>
+  <main>
+    <header>
+      <div>ChatGPT</div>
+      <button id="reset-button">🦝</button>
+    </header>
+    <div id="chat-box"></div>
+    <form id="message-form">
+      <input type="text" id="message-input" placeholder="무엇이든 물어보세요" autocomplete="off" />
+      <div class="form-tools">
+        <span>+</span>
+        <span>⇆ 도구</span>
+      </div>
+      <div class="form-submit">
+        <button type="submit">↑</button>
+      </div>
+    </form>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVPD6hJVl4vqJac24cLzI-B3ToGLKinfI",
+      authDomain: "waterdragon-499c9.firebaseapp.com",
+      databaseURL: "https://waterdragon-499c9-default-rtdb.firebaseio.com",
+      projectId: "waterdragon-499c9",
+      storageBucket: "waterdragon-499c9.appspot.com",
+      messagingSenderId: "756466741361",
+      appId: "1:756466741361:web:797739fb3fc401fb3eebd0",
+      measurementId: "G-6HZJ6V3BS5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const chatRef = ref(db, "secret-chat");
+
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = Math.random().toString(36).substring(2, 10);
+      localStorage.setItem("userId", userId);
+    }
+
+    const box = document.getElementById("chat-box");
+
+    function clearChatBox() {
+      box.innerHTML = "";
+    }
+
+    onChildAdded(chatRef, (data) => {
+      const msg = data.val();
+      const div = document.createElement("div");
+      div.classList.add("message");
+      div.classList.add(msg.user === userId ? "mine" : "theirs");
+      div.textContent = msg.text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    });
+
+    document.getElementById("message-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = document.getElementById("message-input");
+      const text = input.value.trim();
+      if (text) {
+        push(chatRef, { text, user: userId });
+        input.value = "";
+      }
+    });
+
+    document.getElementById("easter-egg").addEventListener("click", () => {
+      alert("좋아해 지우야");
+    });
+
+    document.getElementById("reset-button").addEventListener("click", async () => {
+      const snapshot = await get(chatRef);
+      if (snapshot.exists()) {
+        await remove(chatRef);
+      }
+      clearChatBox();
+    });
+  </script>
+</body>
+</html>
