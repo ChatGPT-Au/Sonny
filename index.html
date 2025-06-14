@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>비밀 채팅</title>
+  <title>새 채팅</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -110,7 +110,7 @@
     #chat-box {
       flex: 1;
       padding: 16px;
-      padding-bottom: 150px;
+      padding-bottom: 150px; /* 채팅 입력창 높이보다 크게 지정하여 메시지가 가려지지 않게 함 */
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -197,10 +197,10 @@
       ChatGPT
     </div>
     <div class="sidebar-menu">
-      <p>새 채팅</p>
+      <p><a href="https://chatgpt.com" style="text-decoration: none; color: inherit;">새 채팅</a></p>
       <p>채팅 검색</p>
       <p>라이브러리</p>
-      <p>Sora</p>
+      <p id="sora-button">Sora</p>
       <p>GPT</p>
     </div>
     <div class="chat-list">
@@ -213,7 +213,7 @@
       <p>비교문화 수행평가</p>
       <p>술 마시고 싶을 때</p>
       <p>부산 여행 코스 추천</p>
-      <p>부동의 이상형</p>
+      <p id="ideal-type">부동의 이상형</p>
       <p>성공 방법</p>
       <p>수행평가 양식 확인</p>
       <p>브래드 피트 따라잡기</p>
@@ -292,9 +292,21 @@
         input.value = "";
       }
     });
+    
+    document.getElementById("sora-button").addEventListener("click", () => {
+      // 미니게임 페이지로 이동 (예: minigame.html)
+      window.location.href = "minigame.html";
+    });
 
     document.getElementById("easter-egg").addEventListener("click", () => {
       alert("좋아해 지우야");
+    });
+    document.querySelectorAll('.chat-list p').forEach(item => {
+      if (item.textContent.trim() === "부동의 이상형") {
+        item.addEventListener('click', () => {
+          alert("You");
+        });
+      }
     });
 
     document.getElementById("reset-button").addEventListener("click", async () => {
